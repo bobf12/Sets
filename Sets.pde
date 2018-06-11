@@ -9,6 +9,7 @@ import java.util.Iterator;
 MathsSym m;
 
 // declare a TuioProcessing client
+
 TuioProcessing tuioClient;
 
 HashMap<Integer, String> symbs= new HashMap();
@@ -22,11 +23,9 @@ ArrayList<Expr> expressions;
 int textPosY=100;
 int textPosX1=50;
 int textPosX2=300;
-boolean drawObjs = false;
+boolean drawObjs = false; // should we show the locations of TUIObjects?
 
-
-
-boolean changed=true;
+boolean changed=true; // Has anything changed that needs draw() to re-display things?
 
 void setup() {
   size(800, 700);
@@ -36,8 +35,8 @@ void setup() {
 
   textSize(TEXTSIZE);
   rectMode(CENTER);
-  
-    textAlign(CENTER, BOTTOM);
+
+  textAlign(CENTER, BOTTOM);
 
   symbs.put(11, UNION);
   symbs.put(12, INTER);
@@ -49,7 +48,7 @@ void setup() {
   symbs.put(2, "C");
   symbs.put(3, "D");
   symbs.put(4, "E");
-  
+
   symbs.put(5, "A");
   symbs.put(6, "B");
   symbs.put(7, "C");
@@ -59,8 +58,6 @@ void setup() {
 
   symbs.put(30, "("); // not used yet!
   symbs.put(31, ")");
-
-
 
   tuioClient  = new TuioProcessing(this);
 }
@@ -91,12 +88,12 @@ void drawScreen() {
       for (int i=0; i<expressions.size(); i++ ) {
         Expr e = expressions.get(i);
         //textAlign(CENTER, CENTER);
-        
-    textAlign(CENTER, BOTTOM);
+
+        textAlign(CENTER, BOTTOM);
         text(e.toString(), (int)((i +0.5)* width/expressions.size()), textPosY);
         e.calcCircles( (int)((i +0.5)* width/expressions.size()), height/2);
       }
-      
+
       // draw all the circle fills
       for (int i =0; i<width; i++) {
         for (int j = 0; j<height; j++) {
@@ -132,6 +129,7 @@ synchronized void addTuioObject(TuioObject obj) {
   int id = obj.getSymbolID();
   if (id==SHOWOBJS) {
     drawObjs=true;
+    changed=true;
     return;
   }
   String label = "X";
@@ -168,6 +166,7 @@ synchronized void removeTuioObject(TuioObject obj) {
   int id = obj.getSymbolID();
   if (id==SHOWOBJS) {
     drawObjs=false;
+    changed=true;
     return;
   }
   if (objects.containsKey(id)) {
