@@ -15,8 +15,8 @@ class Parser {
 
   Parser() {
   }
- 
- // xxx yyy
+
+
   // parse - return an Expr.
   // How to return a List<Expr>?
 
@@ -28,17 +28,19 @@ class Parser {
     stack.init();
     return parseExp(tokens.iterator(), stack);
   }
-    
+
   ArrayList<Expr> parseExp(Iterator<MathsSym> tokens, ExprStack stack) {
     // Nothing left to parse
-    Log("P : "+stack);
-
+    
     if (!tokens.hasNext()) {
-      //if (stack.isEmpty() || !(stack.top().isComplete())) {
-      if (!(stack.top().isComplete())) { // incomplete expr
+      Log("At End : "+stack);
+      if (stack.hasError()) { // incomplete expr
+      Log("Err: ");
         return null;
       } else {
-        //accumulate(stack); // why accumulate?
+        
+
+        accumulate(stack); // why accumulate?
         return stack.stack; // ArrayList containing  all expressions
       }
     }
@@ -59,7 +61,7 @@ class Parser {
     if (token.isBinOp()) {
 
       //Log("BinOp:"+token);
-      if (stack.isEmpty() || !(stack.top().isComplete())) { 
+      if (stack.hasError()) { 
         // if empty, then we're starting with a BinOp
         // if top is not complete, then we've got two successive BinOps
 
@@ -77,22 +79,41 @@ class Parser {
     if (token.isOpen()) {
       // push something?
       // a bracket?
-      stack.push(parseSubExp(tokens));
-      // return something? accumulate?
+      Expr e = parseSubExp(tokens);
+      //Log("Got subExpr: "+e + " S: "+stack.stack);
+      if (e==null) {
+        return null;
+      } else {
+
+        stack.push(e);
+        accumulate(stack); // do we need this here?
+        parseExp(tokens, stack); // back from the brackets now - so do the rest. 
+        return stack.stack;
+      }
     }
 
     if (token.isClose()) {
+
+      //Log("Close :"+stack.stack);
       accumulate(stack);
+      
+      //Log("Close-:"+stack.stack);
+      if (stack.hasError()){
+        return null;
+      } else {
       return stack.stack;
+      }
     }
     return null;
   }
 
   Expr parseSubExp(Iterator<MathsSym> tokens) {
+    // parse a bracketed expression.
     ExprStack s = new ExprStack();
     s.init();
     ArrayList<Expr> el= parseExp(tokens, s);
-    if (el.size()==1) {
+    if (el != null && el.size()==1) {
+      //Log("parseSubExp: "+el.get(0));
       return el.get(0);
     } else { 
       return null;
@@ -103,20 +124,20 @@ class Parser {
     // pop some things until we can build a complete expr. Then push this.
     // 
 
-    Log("A : "+stack);
+    //Log("A : "+stack);
     if (stack.size()>=2) {
       Expr e1=stack.pop(); // should be complete
-      if (stack.top().isBinExpr() && stack.top().isComplete()) {
+      if (stack.top().isBinExpr() && !stack.top().isComplete()) {
         BinExpr e2=(BinExpr)stack.pop(); // should be incomplete
         accumulate(stack);
         e2.right=e1;
-        stack.push(e2); // could have left it on the stack
-      } else {
+        stack.push(e2);
+      } else {  
         accumulate(stack);
         stack.push(e1);
       }
     }
 
-    Log("A-: "+stack);
+    //Log("A-: "+stack);
   }
 }

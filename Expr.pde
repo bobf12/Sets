@@ -10,8 +10,6 @@ abstract class Expr {
   // plus: brackets? Unary ops? Empty
 
   MathsSym sym; 
-  int cOffset=70;
-  int cRad=200;
 
   abstract String toString();
 
@@ -108,10 +106,11 @@ class NameExpr extends Expr implements Comparable {
     pushStyle();
     ellipseMode(CENTER);
     textAlign(CENTER, CENTER);
+    
     noFill();
     stroke(255);
     ellipse(xLoc, yLoc, cRad, cRad);
-    text(name, xLoc, yLoc);
+    text(name, xLoc, yLoc-10);
     popStyle();
   }
 

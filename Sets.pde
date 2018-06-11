@@ -24,7 +24,7 @@ int textPosX1=50;
 int textPosX2=300;
 boolean drawObjs = false;
 
-final int SHOWOBJS=28;
+
 
 boolean changed=true;
 
@@ -34,7 +34,10 @@ void setup() {
   Calibration.setSize(width, height);
   Calibration.init(this);
 
-  textSize(50);
+  textSize(TEXTSIZE);
+  rectMode(CENTER);
+  
+    textAlign(CENTER, BOTTOM);
 
   symbs.put(11, UNION);
   symbs.put(12, INTER);
@@ -87,7 +90,9 @@ void drawScreen() {
       // show expressions and work out locations of circles
       for (int i=0; i<expressions.size(); i++ ) {
         Expr e = expressions.get(i);
-        textAlign(CENTER, CENTER);
+        //textAlign(CENTER, CENTER);
+        
+    textAlign(CENTER, BOTTOM);
         text(e.toString(), (int)((i +0.5)* width/expressions.size()), textPosY);
         e.calcCircles( (int)((i +0.5)* width/expressions.size()), height/2);
       }
@@ -137,7 +142,7 @@ synchronized void addTuioObject(TuioObject obj) {
   o.text=label;
   o.x=obj.getScreenX(width);
   o.y=obj.getScreenY(height);
-  //o.size=(int)random(50, 100);
+
   objects.put(id, o);
   symList.add(o);
   updateExpressions();

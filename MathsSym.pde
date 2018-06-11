@@ -1,30 +1,31 @@
 class MathsSym {
   int x, y;
   String text;
-  float angle=0;
-  int size=60;
+  int size=40;
   int rad=10;
 
   MathsSym() {
   }
 
   void draw() {
-    //noFill();
-    //stroke(rectCol);
-    noStroke();
+
     pushStyle();
-    fill(255, 150, 150, 100);
+    stroke(255, 150, 150, 100);
+    fill(20);
+    
+    textSize(15);
+    textAlign(CENTER, CENTER);
 
     pushMatrix();
     translate(
       (int)Calibration.transformX(x), 
       (int)Calibration.transformY(y));
 
-    //rotate(angle);
-    rect(0, 0, size, size, rad, rad, rad, rad);
+    rect(0, 0, 2*size, size, rad, rad, rad, rad);
     popMatrix();
 
     //fill(textCol);
+   fill(255);
     text(text, (int)Calibration.transformX(x), 
       (int)Calibration.transformY(y));
     popStyle();
@@ -34,11 +35,8 @@ class MathsSym {
     return text;
   }
 
-  boolean isNum() {
-    return (text=="0" || text == "1" || text == "2" || text == "3"|| text == "6");// text == 0, 1, 2, ...
-  }
   boolean isName() {
-    return (text=="A" || text == "B" || text == "C" || text == "D"|| text == "E");// text == 0, 1, 2, ...
+    return (text=="A" || text == "B" || text == "C" || text == "D"|| text == "E");
   }
   boolean isBinOp() {
     return (text==UNION || text == INTER || text == DIFF);

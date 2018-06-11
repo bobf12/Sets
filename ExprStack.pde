@@ -19,6 +19,10 @@ class ExprStack {
     return (stack.size()==0);
   }
   
+  boolean hasError(){
+    return isEmpty() || !(top().isComplete());
+  }
+  
   int size(){
     return stack.size();
   }
